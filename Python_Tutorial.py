@@ -17,8 +17,6 @@ st.code("Mylist = [1,2,3]")
 st.code("if(l := len(Mylist) > 2):")
 st.code("print(l)") 
 st.code("print(a := Mylist)") 
-st.code("print(a)") 
-
 
 st.subheader("Output")
 st.success("true")
