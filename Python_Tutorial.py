@@ -16,7 +16,8 @@ st.subheader("Example:")
 st.code("Mylist = [1,2,3]")
 with st.echo():
  if(l := len(Mylist) > 2):
- print(l) #true
+  print(l) #true
+ 
  print(a := Mylist) 
  print(a) 
 
