@@ -1,4 +1,5 @@
 import streamlit as st 
+from PIL import Image
 
 # title
 st.title("Python tutorial: Tricks to make your life easier.")
@@ -7,12 +8,17 @@ st.header("Simple but effective tips for every python lovers")
 # text
 st.text("Here you have 10 tips to use in python to make easier your data science path")
 
+#image
+image = Image.open('python_tutorial.jpg')
+
+st.image(image, caption='Python tutorial')
+
 #Tutorial
 #subheader
 # step 1 
 st.header("1. Walrus operator")
 txt = '''
-The *Walrus** or **:=** operator is one of the latest additions to python 
+The **Walrus** or **:=** operator is one of the latest additions to python 
 3.8. It is an assignment operator that lets you assign value to a 
 variable within an expression like conditional statements, loops, etc.
 '''
@@ -294,8 +300,7 @@ Welcome stranger!\n
 Password: **** [abdc]\n
 Wrong password''')
 
-import streamlit as st 
-
+# to add an hyperlink into text paragraph
 txt = '''
 Here is [a book](https://www.amazon.com/Automate-Boring-Stuff-Python-2nd/dp/1593279922?dchild=1&keywords=automate+the+boring+stuff+with+python&qid=1602697607&sr=8-2&linkCode=sl1&tag=pranjal20-20&linkId=71b2efa5db080e8f74068aebec7d7fb0&language=en_US&ref_=as_li_ss_tl)
 on Python programming that I would definitely recommend for all beginners.
