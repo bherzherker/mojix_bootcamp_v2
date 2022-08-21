@@ -8,6 +8,10 @@ flag_cc = 0
 st.title('Stock/Inventory Discrepancy (Analytics)')
 st.header('Importing data')
 
+txt = '''
+    If you have the link to the updated data files you can add them, below is the default link.
+'''
+st.write(txt)
 if 'data' not in st.session_state:
     #default dataframe
     st.session_state.df_expected = pd.read_csv("https://storage.googleapis.com/mojix-devops-wildfire-bucket/analytics/bootcamp_2_0/Bootcamp_DataAnalysis_Expected.csv", encoding="latin-1", dtype=str)
@@ -22,6 +26,11 @@ txt = '''
 st.write(txt)
 file_website_soh = st.text_input('SOH CSV file', "https://storage.googleapis.com/mojix-devops-wildfire-bucket/analytics/bootcamp_2_0/Bootcamp_DataAnalysis_Expected.csv")
 file_website_cc = st.text_input('Inventory CycleCount CSV file', "https://storage.googleapis.com/mojix-devops-wildfire-bucket/analytics/bootcamp_2_0/Bootcamp_DataAnalysis_Counted.csv")
+
+txt = '''
+    It is recommended to import the data in order to have the most updated data.
+'''
+st.write(txt)
 
 import_from_web = st.button("Import data")
 if import_from_web:
@@ -70,6 +79,11 @@ else:
 
 
 #fix and update
+txt = '''
+Press the update button without duplicates before starting the comparison.
+'''
+st.write(txt)
+
 update_df = st.button('Without duplicates')
 if update_df:
     st.session_state.df_expected_updated = st.session_state.df_expected.drop_duplicates("Retail_Product_SKU")
@@ -113,7 +127,8 @@ else:
 
 
 #prepare for merge
-
+st.session_state.df_expected_updated = st.session_state.df_expected.drop_duplicates("Retail_Product_SKU")
+st.session_state.df_counted_updated = st.session_state.df_counted.drop_duplicates('RFID')
 df_B = st.session_state.df_counted_updated.groupby("Retail_Product_SKU").count()[["RFID"]] # count and subset RFID
 df_B = df_B.reset_index() #prepare to merge
 df_B = df_B.rename(columns={"RFID":"Retail_CyCQTY"}) #changing RFID name to Retail_CyCQTY
@@ -134,6 +149,11 @@ interest_columns = ["Retail_Product_Color",
 df_A = st.session_state.df_expected_updated[interest_columns]
 
 #merging
+st.header('Discrepancy')
+txt = '''
+In this section the merging of data is performed, be sure not to have duplicate data. The differential or unders will be found.
+'''
+st.write(txt)
 merge = st.button('Merge')
 if merge:
     df_discrepancy = pd.merge(df_A, df_B, how="outer", left_on="Retail_Product_SKU", right_on="Retail_Product_SKU", indicator=True) #merging
@@ -144,10 +164,11 @@ if merge:
     df_dyscrepancy = df_discrepancy["Retail_SOHQTY"] = df_discrepancy["Retail_SOHQTY"].fillna(0).astype(int) #converting NAN to 0 and to interger type
     df_dyscrepancy = df_discrepancy["Diff"] = df_discrepancy["Retail_CyCQTY"] - df_discrepancy["Retail_SOHQTY"] #dataframe  by dataframe
     st.dataframe(df_discrepancy)
-    df_diff = df_discrepancy.groupby(['Diff']).count()[["Retail_CyCQTY","Retail_SOHQTY"]]
-    st.dataframe(df_diff)
+    st.dataframe(df_discrepancy[["Retail_Product_Name", "Diff"]])
+    #st.dataframe(df_diff)
     #unders
     df_discrepancy.loc[df_discrepancy["Diff"]<0, "Unders"] = df_discrepancy["Diff"] * (-1)
     df_discrepancy["Unders"] = df_discrepancy["Unders"].fillna(0).astype(int)
     st.dataframe(df_discrepancy)
+    st.dataframe(df_discrepancy[["Retail_Product_Name", "Diff","Unders"]])
 
