@@ -111,6 +111,9 @@ if dimension_cc[0] == unique_cc:
 else:
     col3_cc.metric("Duplicates in this table", "True")
 
+st.session_state.df_counted_updated = st.session_state.df_counted_updated.groupby("Retail_Product_SKU").count()[["RFID"]] 
+
+df_B = df_counted_updated.groupby("Retail_Product_SKU").count()[["RFID"]]
 # show = st.button('show')
 
 # if show:
